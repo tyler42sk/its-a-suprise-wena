@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #ffd6e6;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    h1 {
+      color: #ff4d8d;
+      margin-bottom: 1rem;
+    }
+    .heart-frame {
+      width: 200px;
+      height: 200px;
+      margin: 1rem auto;
+      position: relative;
+    }
+    .heart-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #ff4d8d;
+      clip-path: path('M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z');
+      transform: scale(8);
+      z-index: -1;
+    }
+    .photo {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #ff4d8d;
+    }
+    .buttons-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .yes-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .message {
+      color: #ff4d8d;
+      font-size: 1.2rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      max-width: 200px;
+      text-align: left;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      white-space: nowrap;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    #yesBtn {
+      background-color: #ff4d8d;
+      color: white;
+    }
+    #noBtn {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    #backBtn {
+      background-color: #ff4d8d;
+      color: white;
+      margin-top: 1rem;
+    }
+    .hearts {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .celebration-gif {
+      width: 200px;
+      height: 200px;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+  <div class="container">
+    <h1>Will you be my girlfriend? 💕</h1>
+    <div class="heart-frame">
+      <img class="photo" src="./images/profile-photo.png" alt="Your Photo">
+    </div>
+    <div class="buttons-section">
+      <div class="yes-section">
+        <button id="yesBtn" onclick="accepted()">Yes I will🌚</button>
+        <div class="message" id="message"></div>
+      </div>
+      <button id="noBtn" onclick="moveButton()">No I won't💀</button>
+    </div>
+  </div>
+
+  <script>
+    let phase = 0;
+    const messages = [
+      "Are you sure? 😢",
+      "But I will be sad... 😭",
+      "Do you want to make me sad? 💔",
+      "Why don't you just press yes? 🥺",
+      "Pretty please? 🥺",
+      "I promise I'll make you happy! 🥺",
+      "Think about all the fun we'll have! 🌚",
+      "I'll buy you food! 🍕",
+      "I'll give you all my attention! 🌟",
+      "You're making this harder than it needs to be 😭",
+      "Come on, you know you want to! 👀",
+      "I'll be the best sex buddy ever! 😭💀",
+      "Don't make me play sad music 😔",
+      "Is that your final answer? 🥺",
+      "Why are you so mean? 😥"
+    ];
+
+    const noResponses = [
+      "Yes I'm sure 😒",
+      "Okay, but still no 😤",
+      "I don't care 🙄",
+      "Still no 🤦‍♀️",
+      "Nope 😑",
+      "Not convinced 😪",
+      "Don't care 🥱",
+      "I'll buy my own food 😌",
+      "I don't need attention 💅",
+      "Not making it hard at all 😏",
+      "Still not convinced 🌚",
+      "Doubt it 💀",
+      "I'm not making you do anything 😒",
+      "Absolutely final 😤",
+      "Because I can be 😈"
+    ];
+
+    function moveButton() {
+      const btn = document.getElementById('noBtn');
+      const messageDiv = document.getElementById('message');
+      
+      // Update message and button text
+      messageDiv.textContent = messages[phase];
+      btn.textContent = noResponses[phase];
+      
+      // Move button to random position
+      const maxX = window.innerWidth - btn.offsetWidth;
+      const maxY = window.innerHeight - btn.offsetHeight;
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+      
+      btn.style.position = 'fixed';
+      btn.style.left = `${randomX}px`;
+      btn.style.top = `${randomY}px`;
+      
+      // Increment phase
+      phase = (phase + 1) % messages.length;
+    }
+
+    function accepted() {
+      document.querySelector('.container').innerHTML = `
+        <h1>Yay! You said YES! 🎉</h1>
+        <img class="celebration-gif" src="./images/bear-gif.gif" alt="Celebrating Bears">
+        <p style="font-size: 1.5rem; color: #ff4d8d;">I knew you'd say yes! 🥺❤️</p>
+        <p style="font-size: 1.2rem; color: #ff4d8d;">You made the right choice! 😚</p>
+        <button id="backBtn" onclick="resetPage()">Start Over</button>
+      `;
+      createHearts();
+    }
+
+    function resetPage() {
+      location.reload();
+    }
+
+    function createHearts() {
+      const container = document.getElementById('hearts');
+      for (let i = 0; i < 50; i++) {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤️';
+        heart.style.position = 'absolute';
+        heart.style.fontSize = '24px';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        heart.style.animation = `fall ${Math.random() * 2 + 2}s linear infinite`;
+        container.appendChild(heart);
+      }
+    }
+
+    // Add falling animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fall {
+        from {
+          transform: translateY(-100vh);
+        }
+        to {
+          transform: translateY(100vh);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
